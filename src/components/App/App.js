@@ -7,31 +7,80 @@ import  PlayList  from '../PlayList/PlayList';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+    this.updatePlayListName = this.updatePlayListName.bind(this);
     this.state = {
       searchResults: [
-        {track1:{
+        {
           name: 'Song1',
           artist: 'Artist1',
           album: 'Album1',
           id: new Date(Date.now()).getTime()
-          } 
         },
-        {track2:{
+        {
           name: 'Song2',
           artist: 'Artist2',
           album: 'Album2',
           id: new Date(Date.now()).getTime() + 1
-          } 
         },
-        {track3:{
+        {
           name: 'Song3',
           artist: 'Artist3',
           album: 'Album3',
           id: new Date(Date.now()).getTime() + 2
-          } 
         }
-      ]   
+      ],
+      playListName: '',
+      playListTracks: [
+        {
+          name: 'ListA',
+          artist: 'ArtistA',
+          album: 'AlbumA',
+          id: new Date(Date.now()).getTime()
+        },
+        {
+          name: 'ListB',
+          artist: 'ArtistB',
+          album: 'AlbumB',
+          id: new Date(Date.now()).getTime() + 1
+        },
+        {
+          name: 'ListC',
+          artist: 'ArtistC',
+          album: 'AlbumC',
+          id: new Date(Date.now()).getTime() + 2
+        }
+      ] 
     };
+  }
+  addTrack(track) {
+    let playListTracks = this.state.playListTracks;
+    for(var i = 0; i < playListTracks.length; i++) {
+      if(!playListTracks[i].id === track.id) {
+        playListTracks.push(track);
+        this.setState({
+          playListTracks
+        });
+      }
+    }
+  }
+  removeTrack(track) {
+    let playListTracks = this.state.playListTracks;
+    for(var i = 0; i < playListTracks.length; i++) {
+      if(playListTracks[i].id === track.id) {
+        playListTracks.split(playListTracks[i], 1);
+        this.setState({
+          playListTracks
+        });
+      }
+    }
+  }
+  updatePlayListName(name) {
+    console.log("update name: ", name);
+    this.setState({
+      playListName: name
+    });
   }
 
   render() {
@@ -41,8 +90,8 @@ class App extends Component {
         <div className="App">
           <SearchBar />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults}/>
-            <PlayList/>
+            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack}/>
+            <PlayList playListName={this.state.playListName} playListTracks={this.state.playListTracks} onRemove={this.removeTrack} onNameChange={this.updatePlayListName} />
           </div>
         </div>
       </div>
