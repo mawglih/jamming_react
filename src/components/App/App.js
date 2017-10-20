@@ -3,6 +3,7 @@ import './App.css';
 import  SearchBar  from '../SearchBar/SearchBar';
 import  SearchResults  from '../SearchResults/SearchResults';
 import  PlayList  from '../PlayList/PlayList';
+import { Spotify } from '../../utility/Spotify';
 
 class App extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class App extends Component {
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlayListName = this.updatePlayListName.bind(this);
+    this.savePlaylist = this.savePlaylist.bind(this);
+    this.search = this.search.bind(this);
     this.state = {
       searchResults: [
         {
@@ -80,16 +83,29 @@ class App extends Component {
       playListName: name
     });
   }
+  savePlaylist(playListTracks) {
+    let trackURIs = [];
+    playListTracks.map((track) => {
+        trackURIs.push(track.uri);
+    });
+  }
+  search(term){
+    console.log('app search: ', term);
+  }
+  componentDidMount() {
+    Spotify.getAccessToken();
+    console.log('app comp mount');
+  }
 
   render() {
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar />
+          <SearchBar onSearch={this.search}/>
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack}/>
-            <PlayList playListName={this.state.playListName} playListTracks={this.state.playListTracks} onRemove={this.removeTrack} onNameChange={this.updatePlayListName} />
+            <PlayList playListName={this.state.playListName} playListTracks={this.state.playListTracks} onRemove={this.removeTrack} onNameChange={this.updatePlayListName} onSave={this.savePlaylist} />
           </div>
         </div>
       </div>
