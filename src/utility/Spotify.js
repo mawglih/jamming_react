@@ -54,7 +54,8 @@ const Spotify = {
     },
 
     savePlayList(name, uris) {
-        console.log(this.name);
+        console.log(name);
+        console.log(uris);
         if(!name || uris.length) {
             return;
         } else {
