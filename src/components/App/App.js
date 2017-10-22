@@ -3,7 +3,7 @@ import './App.css';
 import  SearchBar  from '../SearchBar/SearchBar';
 import  SearchResults  from '../SearchResults/SearchResults';
 import  PlayList  from '../PlayList/PlayList';
-import { Spotify } from '../../utility/Spotify';
+import  Spotify  from '../../utility/Spotify';
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class App extends Component {
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlayListName = this.updatePlayListName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
-    this.search = this.search.bind(this);
+    this.searchSpotify = this.searchSpotify.bind(this);
     this.state = {
       searchResults: [
         {
@@ -35,6 +35,7 @@ class App extends Component {
         }
       ],
       playListName: '',
+      tracks: [],
       playListTracks: [
         {
           name: 'ListA',
@@ -89,8 +90,12 @@ class App extends Component {
         trackURIs.push(track.uri);
     });
   }
-  search(term){
-    console.log('app search: ', term);
+  searchSpotify(term){
+    console.log('app term is: ', term);
+    Spotify.search(term)
+    .then(tracks => {
+      this.setState({tracks})
+    })
   }
   componentDidMount() {
     Spotify.getAccessToken();
@@ -102,7 +107,7 @@ class App extends Component {
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar onSearch={this.search}/>
+          <SearchBar onSearch={this.searchSpotify}/>
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack}/>
             <PlayList playListName={this.state.playListName} playListTracks={this.state.playListTracks} onRemove={this.removeTrack} onNameChange={this.updatePlayListName} onSave={this.savePlaylist} />

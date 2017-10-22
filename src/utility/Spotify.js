@@ -1,26 +1,59 @@
 const CLIENT_ID = '9306b82e051d4cee8b874d307e9296ad';
-const CLIENT_SECRET = '17f91fb036ae4aedb710bfa540e70aeb';
-const REDIRECT_URI = 'http://localhost:3000/';
-const RESPONSE_TYPE = 'token';
-const SCOPES = 'playlist-modify-publi';
-let accessToken, expiresIn;
-export const Spotify = {
+const REDIRECT_URI = 'http://localhost:3000';
+
+let accessToken, expiresIn; 
+
+
+const Spotify = {
     getAccessToken() {
         if(accessToken) {
+            window.setTimeout(() => accessToken = '', expiresIn * 1000);
+            window.history.pushState('Access Token', null, '/');  
             return accessToken;
         }
-        return fetch(`https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}&redirect_uri=${REDIRECT_URI}`, { method: 'GET', mode: 'no-cors'})
-            .then(response => {
-                if(response.ok){
-                    console.log('response', response);
-                    // window.location.href = response.url;
-                    // accessToken = response.url.match(/access_token=([^&]*)/);
-                    // expiresIn = response.url.match(/expires_in=([^&]*)/);
-                    // console.log(accessToken);
-                }
-                throw new Error('Request failed');
-            }).catch(error => {
-                console.log('Request failed: ', error);
-            })
+
+        const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
+        const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/); 
+        if (accessTokenMatch) {
+            accessToken = accessTokenMatch[1];
+            expiresIn = Number(expiresInMatch[1]);
+            return accessToken;
+        } else {
+            const accessUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&scope=playlist-modify-public&redirect_uri=${REDIRECT_URI}`;
+            window.location = accessUrl;
+        }
+        expiresIn = Number(expiresInMatch[1]);     
+    },
+    
+    search(term) {
+        const accessToken = Spotify.getAccessToken();
+        console.log('accessToken in spotify is: ', accessToken);
+        console.log('expires in in spotify is: ', expiresIn);
+        console.log('term in spotify is: ', term);
+        return fetch(`https://api.spotify.com/v1/search?type=album,track,artist&q=${term}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+            console.log('tracks: ', response);
+            if(response.tracks) {
+                return response.tracks.map(track => {
+                    console.log('track is: ', track);
+                    return {
+                        track: track.id,
+                        name: track.name,
+                        artist: track.artists[0].name,
+                        album: track.album.name,
+                        uri: track.uri
+                    }
+                })
+            }
+        })
+        // let expiresIn = Spotify.
+
+        
     }
 }
+export default Spotify;
