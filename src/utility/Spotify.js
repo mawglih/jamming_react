@@ -21,8 +21,7 @@ const Spotify = {
         } else {
             const accessUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&scope=playlist-modify-public&redirect_uri=${REDIRECT_URI}`;
             window.location = accessUrl;
-        }
-        expiresIn = Number(expiresInMatch[1]);     
+        } 
     },
     
     search(term) {
