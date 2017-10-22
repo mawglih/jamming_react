@@ -14,48 +14,9 @@ class App extends Component {
     this.savePlaylist = this.savePlaylist.bind(this);
     this.searchSpotify = this.searchSpotify.bind(this);
     this.state = {
-      searchResults: [
-        {
-          name: 'Song1',
-          artist: 'Artist1',
-          album: 'Album1',
-          id: new Date(Date.now()).getTime()
-        },
-        {
-          name: 'Song2',
-          artist: 'Artist2',
-          album: 'Album2',
-          id: new Date(Date.now()).getTime() + 1
-        },
-        {
-          name: 'Song3',
-          artist: 'Artist3',
-          album: 'Album3',
-          id: new Date(Date.now()).getTime() + 2
-        }
-      ],
+      searchResults: [],
       playListName: '',
-      tracks: [],
-      playListTracks: [
-        {
-          name: 'ListA',
-          artist: 'ArtistA',
-          album: 'AlbumA',
-          id: new Date(Date.now()).getTime()
-        },
-        {
-          name: 'ListB',
-          artist: 'ArtistB',
-          album: 'AlbumB',
-          id: new Date(Date.now()).getTime() + 1
-        },
-        {
-          name: 'ListC',
-          artist: 'ArtistC',
-          album: 'AlbumC',
-          id: new Date(Date.now()).getTime() + 2
-        }
-      ] 
+      playListTracks: []
     };
   }
   addTrack(track) {
@@ -71,10 +32,11 @@ class App extends Component {
     let playListTracks = this.state.playListTracks;
     for(var i = 0; i < playListTracks.length; i++) {
       if(playListTracks[i].id === track.id) {
-        playListTracks.split(playListTracks[i], 1);
+        playListTracks.splice(playListTracks[i], 1);
         this.setState({
           playListTracks
         });
+        break;
       }
     }
   }
@@ -84,19 +46,24 @@ class App extends Component {
       playListName: name
     });
   }
-  savePlaylist(playListTracks) {
-    let trackURIs = [];
-    playListTracks.map((track) => {
-        trackURIs.push(track.uri);
-    });
+  savePlaylist(playListName, trackURIs) {
+    // this.playlistName = this.state.playListName;
+    // this.trackURIs = this.state.playListTracks.map(track => {
+    //   return {uri: track.uri}
+    // });
+    Spotify.savePlayList(playListName, trackURIs);
+    // playListTracks.map((track) => {
+    //     trackURIs.push(track.uri);
+    // });
   }
   searchSpotify(term){
     console.log('app term is: ', term);
     Spotify.search(term)
-    .then(tracks => {
-      this.setState({tracks})
-    })
+    .then(track => {
+      this.setState({searchResults: track});
+    });
   }
+
   componentDidMount() {
     Spotify.getAccessToken();
     console.log('app comp mount');

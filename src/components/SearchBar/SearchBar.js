@@ -19,19 +19,8 @@ export class SearchBar extends Component {
   handleTermChange(e) {
     this.setState({
       term: e.target.value
-    },() => {
-      this.props.onSearch(this.state.term);
-      console.log('handleterm state: ', this.state.term);
     });
   }
-  // handleSearch(e) {
-  //   this.props.onSearch(this.state.term);
-  //   console.log("search in searchbar ", this.props.onSearch(this.state.term));
-  //   e.preventDefault();
-  // }
-  // componentWillReceiveProps() {
-  //   console.log('Searchbar term: ', this.state.term)
-  // }
     render() {
       return (
             <div className="SearchBar">

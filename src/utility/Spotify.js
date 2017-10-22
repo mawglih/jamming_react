@@ -36,20 +36,61 @@ const Spotify = {
             }
         })
         .then(response => {
-            console.log('tracks: ', response.json());
-            // if(response.tracks) {
-            //     return response.tracks.map(track => {
-            //         console.log('track is: ', track);
-            //         return {
-            //             track: track.id,
-            //             name: track.name,
-            //             artist: track.artists[0].name,
-            //             album: track.album.name,
-            //             uri: track.uri
-            //         }
-            //     })
-            // }
+            //console.log('tracks in spotify are: ', response.json());
+             return response.json();
         })
+        .then(res => {
+            return res.tracks.items.map(track => {
+                console.log('track is: ', track.name );
+                return {
+                    track: track.id,
+                    name: track.name,
+                    artist: track.artists[0].name,
+                    album: track.album.name,
+                    uri: track.uri
+                }
+            });
+        });
+    },
+
+    savePlayList(playListName, trackURIs) {
+        if(playListName && trackURIs) {
+            return;
+        } else {
+            const token = accessToken;
+            let headersVar = {Authorization: `Bearer ${token}`};
+            let userId = '';
+            return fetch(`https://api.spotify.com/v1/me`, {
+                headers: headersVar
+            })
+            .then(res => {
+                return res.json()
+            })
+            .then(jsonRes => {
+                let userId = jsonRes.id;
+                console.log('UserId on Post is: ', userId);
+                fetch(`POST https://api.spotify.com/v1/users/${userId}/playlists`, {
+                    method: 'POST',
+                    headers: {
+                        headersVar,
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'name': 'new play list',
+                        'public': false
+                    }),
+                    dataType: 'json'
+                })
+                .then(response => {
+                    if(response.ok) {
+                        return response.json();
+                    }
+                })
+                .then(jsonResponse => {
+                console.log('Post response is: ', jsonResponse);
+            })
+            });
+        }
     }
-}
+};
 export default Spotify;
