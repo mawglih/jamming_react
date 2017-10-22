@@ -29,26 +29,26 @@ const Spotify = {
         console.log('accessToken in spotify is: ', accessToken);
         console.log('expires in in spotify is: ', expiresIn);
         console.log('term in spotify is: ', term);
-        return fetch(`https://api.spotify.com/v1/search?type=album,track,artist&q=${term}`, {
+        return fetch(`https://api.spotify.com/v1/search?type=trackt&q=${term}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
         })
         .then(response => {
-            console.log('tracks: ', response);
-            if(response.tracks) {
-                return response.tracks.map(track => {
-                    console.log('track is: ', track);
-                    return {
-                        track: track.id,
-                        name: track.name,
-                        artist: track.artists[0].name,
-                        album: track.album.name,
-                        uri: track.uri
-                    }
-                })
-            }
+            console.log('tracks: ', response.json());
+            // if(response.tracks) {
+            //     return response.tracks.map(track => {
+            //         console.log('track is: ', track);
+            //         return {
+            //             track: track.id,
+            //             name: track.name,
+            //             artist: track.artists[0].name,
+            //             album: track.album.name,
+            //             uri: track.uri
+            //         }
+            //     })
+            // }
         })
     }
 }
