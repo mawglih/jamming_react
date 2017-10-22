@@ -51,9 +51,6 @@ const Spotify = {
                 })
             }
         })
-        // let expiresIn = Spotify.
-
-        
     }
 }
 export default Spotify;
