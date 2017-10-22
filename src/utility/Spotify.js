@@ -29,7 +29,7 @@ const Spotify = {
         console.log('accessToken in spotify is: ', accessToken);
         console.log('expires in in spotify is: ', expiresIn);
         console.log('term in spotify is: ', term);
-        return fetch(`https://api.spotify.com/v1/search?type=trackt&q=${term}`, {
+        return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${accessToken}`
