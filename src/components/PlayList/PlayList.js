@@ -6,6 +6,7 @@ class PlayList extends Component {
   constructor(props) {
     super(props);
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.state = {
         isRemoval: true
     };
@@ -17,6 +18,9 @@ class PlayList extends Component {
   handleNameChange(e) {
     this.props.onNameChange(e.target.value);
   }
+  handleSave() {
+      this.props.onSave(this.props.playListName, this.props.playListTracks);
+  }
     render() {
       return (
             <div className="PlayList">
@@ -24,7 +28,7 @@ class PlayList extends Component {
                 <input defaultValue="New Playlist" onChange={this.handleNameChange}/>
                   {<TrackList tracks={this.props.playListTracks} onRemove={this.props.onRemove} isRemoval={true}/>}
               
-                <a className="Playlist-save" onClick={this.props.onSave}>SAVE TO SPOTIFY</a>
+                <a className="Playlist-save" onClick={this.handleSave}>SAVE TO SPOTIFY</a>
             </div>
       );
     }

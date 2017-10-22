@@ -46,28 +46,22 @@ class App extends Component {
       playListName: name
     });
   }
-  savePlaylist(playListName, trackURIs) {
-    // this.playlistName = this.state.playListName;
-    // this.trackURIs = this.state.playListTracks.map(track => {
-    //   return {uri: track.uri}
-    // });
-    Spotify.savePlayList(playListName, trackURIs);
-    // playListTracks.map((track) => {
-    //     trackURIs.push(track.uri);
-    // });
+  savePlaylist(name, tracks) {
+    let uris= [];
+    console.log("my list to save is: ", name);
+    tracks = this.state.playListTracks.map(track => {
+      console.log("my track uri is: ", track.uri);
+      return uris.push({uri: track.uri});
+    });
+    Spotify.savePlayList(name, uris);
   }
   searchSpotify(term){
-    console.log('app term is: ', term);
     Spotify.search(term)
     .then(track => {
       this.setState({searchResults: track});
     });
   }
 
-  componentDidMount() {
-    Spotify.getAccessToken();
-    console.log('app comp mount');
-  }
 
   render() {
     return (
